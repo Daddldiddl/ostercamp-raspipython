@@ -7,14 +7,65 @@ led_intern = machine.Pin(25, machine.Pin.OUT)
 # Potentiometer (analogerInput) definieren
 potentiometer = machine.ADC(26)
 
-# Laufvariablen setzen
+#LED Pins
+led1 = machine.Pin(1, machine.Pin.OUT)
+led2 = machine.Pin(2, machine.Pin.OUT)
+led3 = machine.Pin(3, machine.Pin.OUT)
+led4 = machine.Pin(4, machine.Pin.OUT)
+led5 = machine.Pin(5, machine.Pin.OUT)
+led6 = machine.Pin(6, machine.Pin.OUT)
+
+# Konfiguration
 alteWerte=[0] # Liste der vorangehenden Werte - für Mittelung!
 maxAnzahlWerte = 8
 anzahlStufen = 6
-minPoti = 260
-maxPoti = 650
-stufePoti = (maxPoti - minPoti) / anzahlStufen
 
+# Potentiometeranpassung
+minPoti = 250
+maxPoti = 660
+groesseStufe = (maxPoti - minPoti) / (anzahlStufen + 1)
+
+# Schaltet die LEDs abhängig vom übergebenen Wert (0-6)
+def setzeLEDs(potiwert):
+    # globale Variablen sichtbar machen
+    global led1
+    global led2
+    global led3
+    global led4
+    global led5
+    global led6
+    
+    # LED1 schalten
+    if(potiwert>=1):
+        led1.value(1)
+    else:
+        led1.value(0)
+    # LED2 schalten
+    if(potiwert>=2):
+        led2.value(1)
+    else:
+        led2.value(0)
+    # LED3 schalten
+    if(potiwert>=3):
+        led3.value(1)
+    else:
+        led3.value(0)
+    # LED4 schalten
+    if(potiwert>=4):
+        led4.value(1)
+    else:
+        led4.value(0)
+    # LED5 schalten
+    if(potiwert>=5):
+        led5.value(1)
+    else:
+        led5.value(0)
+    # LED6 schalten
+    if(potiwert>=6):
+        led6.value(1)
+    else:
+        led6.value(0)
+    
 # liest den aktuellen Wert aus dem analogen Eingang des Potentiometers
 def lesePoti():
     global potentiometer
@@ -31,14 +82,14 @@ def lesePotiGemittelt():
         alteWerte = alteWerte[1:] # kopiert die Liste ohne das erste (0te) Element
     else:
         return minPoti
-    mittelWert = sum(alteWerte) / len(alteWerte)
+    mittelWert = sum(alteWerte) // len(alteWerte) # abgerundeter Wert - keine Kommazahlen!
     return mittelWert
 
 # bestimmt die Stufe (Anzahl der LEDs)
 def bestimmeStufe(wert):
     global stufePoti, minPoti
     korrigierterWert = wert - minPoti
-    stufe = korrigierterWert // stufePoti # abgerundetes Divisionsergebnis!
+    stufe = korrigierterWert // groesseStufe # abgerundetes Divisionsergebnis!
     if (stufe < 0):
         return 0
     elif (stufe > anzahlStufen):
@@ -54,5 +105,6 @@ while True:
     if (aktuellerWert != alterWert):
         alterWert = aktuellerWert
         stufe = bestimmeStufe(aktuellerWert)
+        setzeLEDs(stufe)
         print("Neuer Wert = {}, Stufe = {}".format(aktuellerWert, stufe))
     time.sleep(0.05) # 50 Millisekunden
