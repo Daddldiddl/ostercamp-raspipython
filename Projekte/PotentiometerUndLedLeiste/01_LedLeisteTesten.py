@@ -1,3 +1,7 @@
+# ---------------------------------------------------
+# Prüft ob alle LEDs sauber angesteuert werden können 
+# ---------------------------------------------------
+
 import machine
 import time
 
@@ -14,14 +18,6 @@ led6 = machine.Pin(6, machine.Pin.OUT)
 
 # Schaltet die LEDs abhängig vom übergebenen Wert (0-6)
 def setzeLEDs(potiwert):
-    # globale Variablen sichtbar machen
-    global led1
-    global led2
-    global led3
-    global led4
-    global led5
-    global led6
-    
     # LED1 schalten
     if(potiwert>=1):
         led1.value(1)
@@ -54,17 +50,14 @@ def setzeLEDs(potiwert):
         led6.value(0)
     
 # Hauptprogramm
-i=0
-setzeLEDs(i)
+anzahlLEDs=0
+setzeLEDs(anzahlLEDs)
 time.sleep(1)
 while True:
     led_intern.toggle()
-    i=i+1
-    if(i>6):
-        i=0
-        setzeLEDs(i)
-        time.sleep(1)
-    else:
-        setzeLEDs(i)
-    print("i = {}".format(i))
+    anzahlLEDs=anzahlLEDs+1
+    if(anzahlLEDs>6):
+        anzahlLEDs=0
+    setzeLEDs(anzahlLEDs)
+    print("Anzahl aktiver LEDs = {}".format(anzahlLEDs))
     time.sleep(0.5)

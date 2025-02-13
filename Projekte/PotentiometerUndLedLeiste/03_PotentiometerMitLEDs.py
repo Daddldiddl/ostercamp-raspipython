@@ -1,3 +1,8 @@
+# -------------------------------------------------------
+# Fügt alles zusammen - die LEDs werden jetzt über
+# das Potentiometer angesteuert und stufenweise aktiviert
+# -------------------------------------------------------
+
 import machine
 import time
 
@@ -15,26 +20,18 @@ led4 = machine.Pin(4, machine.Pin.OUT)
 led5 = machine.Pin(5, machine.Pin.OUT)
 led6 = machine.Pin(6, machine.Pin.OUT)
 
-# Konfiguration
+# sonstige Konfiguration und Initialisierung
 alteWerte=[0] # Liste der vorangehenden Werte - für Mittelung!
-maxAnzahlWerte = 8
-anzahlStufen = 6
+maxAnzahlAlterWerte = 8
 
 # Potentiometeranpassung
 minPoti = 250
-maxPoti = 660
+maxPoti = 65500
+anzahlStufen = 6
 groesseStufe = (maxPoti - minPoti) / (anzahlStufen + 1)
 
 # Schaltet die LEDs abhängig vom übergebenen Wert (0-6)
-def setzeLEDs(potiwert):
-    # globale Variablen sichtbar machen
-    global led1
-    global led2
-    global led3
-    global led4
-    global led5
-    global led6
-    
+def setzeLEDs(potiwert):   
     # LED1 schalten
     if(potiwert>=1):
         led1.value(1)
@@ -68,17 +65,16 @@ def setzeLEDs(potiwert):
     
 # liest den aktuellen Wert aus dem analogen Eingang des Potentiometers
 def lesePoti():
-    global potentiometer
     wert = potentiometer.read_u16()
     return wert
 
 # liest das Potentiometer, mittelt aber über die letzten Werte
 def lesePotiGemittelt():
-    global alteWerte, maxAnzahlWerte
+    global alteWerte # wird ggfs. neu zugewiesen, daher global nutzen!
     wert = lesePoti()
     alteWerte.append(wert) # Wert zur Liste hinzufügen
     # Begrenzt die Liste auf die maximale Anzahl
-    if (len(alteWerte) > maxAnzahlWerte):
+    if (len(alteWerte) > maxAnzahlAlterWerte):
         alteWerte = alteWerte[1:] # kopiert die Liste ohne das erste (0te) Element
     else:
         return minPoti
@@ -87,7 +83,6 @@ def lesePotiGemittelt():
 
 # bestimmt die Stufe (Anzahl der LEDs)
 def bestimmeStufe(wert):
-    global stufePoti, minPoti
     korrigierterWert = wert - minPoti
     stufe = korrigierterWert // groesseStufe # abgerundetes Divisionsergebnis!
     if (stufe < 0):
@@ -107,4 +102,4 @@ while True:
         stufe = bestimmeStufe(aktuellerWert)
         setzeLEDs(stufe)
         print("Neuer Wert = {}, Stufe = {}".format(aktuellerWert, stufe))
-    time.sleep(0.05) # 50 Millisekunden
+    time.sleep(0.1) # 100 Millisekunden
