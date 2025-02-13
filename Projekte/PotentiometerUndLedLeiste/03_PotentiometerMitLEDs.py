@@ -31,34 +31,34 @@ anzahlStufen = 6
 groesseStufe = (maxPoti - minPoti) / (anzahlStufen + 1)
 
 # Schaltet die LEDs abhängig vom übergebenen Wert (0-6)
-def setzeLEDs(potiwert):   
+def setzeLEDs(stufe):   
     # LED1 schalten
-    if(potiwert>=1):
+    if(stufe>=1):
         led1.value(1)
     else:
         led1.value(0)
     # LED2 schalten
-    if(potiwert>=2):
+    if(stufe>=2):
         led2.value(1)
     else:
         led2.value(0)
     # LED3 schalten
-    if(potiwert>=3):
+    if(stufe>=3):
         led3.value(1)
     else:
         led3.value(0)
     # LED4 schalten
-    if(potiwert>=4):
+    if(stufe>=4):
         led4.value(1)
     else:
         led4.value(0)
     # LED5 schalten
-    if(potiwert>=5):
+    if(stufe>=5):
         led5.value(1)
     else:
         led5.value(0)
     # LED6 schalten
-    if(potiwert>=6):
+    if(stufe>=6):
         led6.value(1)
     else:
         led6.value(0)
