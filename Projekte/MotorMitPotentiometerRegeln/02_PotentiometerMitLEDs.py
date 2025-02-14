@@ -18,8 +18,8 @@ servo_pin = 28
 # Motor konfigurieren
 pwm = machine.PWM(machine.Pin(servo_pin))
 pwm.freq(50)
-steuerwert_0grad = 1638
-steuerwert_180grad = 8192
+steuerwert_0grad = 0
+steuerwert_180grad = 180
 
 #LED Pins
 led1 = machine.Pin(1, machine.Pin.OUT)
