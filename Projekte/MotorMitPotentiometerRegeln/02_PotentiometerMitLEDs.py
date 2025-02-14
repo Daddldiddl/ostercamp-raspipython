@@ -12,6 +12,15 @@ led_intern = machine.Pin(25, machine.Pin.OUT)
 # Potentiometer (analogerInput) definieren
 potentiometer = machine.ADC(26)
 
+# GPIO für Steuersignal
+servo_pin = 28
+
+# Motor konfigurieren
+pwm = machine.PWM(machine.Pin(servo_pin))
+pwm.freq(50)
+steuerwert_0grad = 1638
+steuerwert_180grad = 8192
+
 #LED Pins
 led1 = machine.Pin(1, machine.Pin.OUT)
 led2 = machine.Pin(2, machine.Pin.OUT)
@@ -91,9 +100,20 @@ def bestimmeStufe(wert):
         return anzahlStufen
     return stufe
 
+# bestimmt den Wert für die Motoransteuerung
+def bestimmeSteuerwert(wert):
+    steuerFaktor = (wert - minPoti) / (maxPoti - minPoti)
+    steuerwert = (steuerwert_180grad - steuerwert_0grad) * steuerFaktor + steuerwert_0grad
+    if (steuerwert < steuerwert_0grad):
+        return steuerwert_0grad
+    elif (steuerwert > steuerwert_180grad):
+        return steuerwert_180grad
+    return int(steuerwert)
+
 # Hauptprogramm
 alterWert = 0
-while True:
+zaehler = 100
+while zaehler > 0:
     led_intern.toggle()
     aktuellerWert = lesePotiGemittelt()
     # nur ausgeben, wenn Änderung!
@@ -101,5 +121,12 @@ while True:
         alterWert = aktuellerWert
         stufe = bestimmeStufe(aktuellerWert)
         setzeLEDs(stufe)
-        print("Neuer Wert = {}, Stufe = {}".format(aktuellerWert, stufe))
-    time.sleep(0.1) # 100 Millisekunden
+        steuerwert = bestimmeSteuerwert(aktuellerWert)
+        pwm.duty_u16(steuerwert)
+        print("Neuer Wert = {}, Stufe = {}, Steuerwert = {}".format(aktuellerWert, stufe, steuerwert))
+    time.sleep(0.5) # 100 Millisekunden
+    zaehler = zaehler - 1
+# Bereinigen, LEDs ausschalten, Motorsteuerung deinitialisieren
+setzeLEDs(0)
+led_intern.value(0)
+pwm.deinit()
