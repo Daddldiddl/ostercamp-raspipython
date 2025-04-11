@@ -9,8 +9,8 @@ LCD_Anzahl_Spalten = 16
 LCD_Adresse = 0x27
 
 # Festlegung I2C-Pins
-I2C_Pin_SDA = 20
-I2C_Pin_SCL = 21
+I2C_Pin_SDA = 16
+I2C_Pin_SCL = 17
 I2C_Port = 0
 
 # Initialisierung Pins und I2C
