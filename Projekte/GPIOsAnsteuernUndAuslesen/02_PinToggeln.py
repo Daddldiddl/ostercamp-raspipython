@@ -1,17 +1,16 @@
-# --------------------------------------------------------
-# LED über GPIO Pin ansteuern und Wert (an/aus) umschalten
-# --------------------------------------------------------
+# -------------------------------------------------------
+# LED über GPIO Pin ansteuern und Wert umschalten
+# -------------------------------------------------------
 
-import machine
-import time
+# Zusatzfunktionen laden
+import machine   # die für die Raspi-Ansteuerung nötigen Spezialfunktionen
+import time      # Funktionen rund um Zeit - für das Warten benötigt
 
-# Betriebsanzeige
+# GPIO 25 (onboard LED) konfigurieren und einer Variablen zuweisen
 led_intern = machine.Pin(25, machine.Pin.OUT)
 
-# Weist den GPIO Pin als Ausgabe der Variablen led_Pin1 zu
-led_Pin1 = machine.Pin(1, machine.Pin.OUT)
-
-pinValue = 0
+# Endlosschleife (Bedingung ist immer WAHR)
 while True:
-    led_Pin1.toggle() # ändert den aktuellen Wert (an/aus)
-    time.sleep(0.5)
+    led_intern.toggle() # schalte den Status des GPIO um (AN-AUS oder AUS->AN)
+    time.sleep(0.5)     # 0.5 Sekunden warten
+    # Ende der Schleife - jetzt wiederholen
