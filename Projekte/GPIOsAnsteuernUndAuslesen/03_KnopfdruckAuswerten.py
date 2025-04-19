@@ -30,6 +30,6 @@ while True:
         # den neuen Status merken
         alterTasterWert = tasterWert
     # halbe Sekunde warten
-    time.sleep(0.5)
+    time.sleep(0.05)
     # onboard LED toggeln - zeigt Programmaktivität
     ledIntern.toggle()
