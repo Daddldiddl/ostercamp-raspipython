@@ -5,7 +5,6 @@ import time
 lcd = LCD()
 
 # Beleuchtung LCD aktivieren
-lcd.openlight()
 while True:
     # von 10 bis null herunterzaehlen
     for value in range(10):
@@ -17,9 +16,8 @@ while True:
         lcd.clear()
     
     # Countdown vorbei, BOOM! ausgeben
-    lcd.message("BOOOM!")
+    lcd.message("BOOOOOOOOOM!\nBOOOOOOOOOM!")
     time.sleep(1)
     # LCD vor naechster Runde bereinigen
     lcd.clear()
-    lcd.
     
