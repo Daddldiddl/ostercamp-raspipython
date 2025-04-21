@@ -15,7 +15,7 @@ ledOnBoard = machine.Pin(25, machine.Pin.OUT)
 adcPoti = machine.ADC(26)
 
 # Motor initialisieren
-pwm = machine.PWM(machine.Pin(28))
+pwm = machine.PWM(machine.Pin(16))
 pwm.freq(50)
 
 # Bestimmt Winkel für Zeiger aus Temperatur
