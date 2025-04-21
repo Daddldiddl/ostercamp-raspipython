@@ -1,49 +1,25 @@
-# Bibliotheken laden
 import machine
 import time
 
-# DutyWert fuer 0 Grad
-dutyWert000Grad = 1638
-# DutyWert fuer 180 Grad
-dutyWert180Grad = 8192
+poti = machine.ADC(26)
 
-# Nutzbarer Wertebereich von 0 - 180 Grad
-dutyWerteBereich = dutyWert180Grad - dutyWert000Grad
+# Timing fuer 0 Grad
+timing0Grad = 500000
+# Timing fuer 180 Grad
+timing180Grad = 2500000
 
-# Pins initialisieren
-ledOnBoard = machine.Pin(25, machine.Pin.OUT)
-adcPoti = machine.ADC(26)
+# Initialisierun PWM-Generator
+servo = machine.PWM(machine.Pin(16))
+servo.freq(50)
 
-# Motor initialisieren
-pwm = machine.PWM(machine.Pin(16))
-pwm.freq(50)
-
-# Bestimmt Winkel für Zeiger aus Temperatur
-def bestimmeZeigerWinkelAusADC(adcWert):
-    winkel = (adcWert / 65535) * 180.0
-    return winkel
-
-# Bestimmt den an den Motor zu übergebenden Wert anhand des Winkels
-def bestimmeDutyWertFuerWinkel(winkel):
-    # nur gültige Winkel akzeptieren
-    if (winkel > 180):
-        winkel = 180
-    elif (winkel < 0):
-        winkel = 0
-    # Steuerwert bestimmen
-    dutyBereichsWert = (winkel / 180.0) * dutyWerteBereich
-    dutyWert = int(dutyBereichsWert + dutyWert000Grad)
-    print("PWM DutyWert: {} (entspricht {:.2f}°)".format(dutyWert, winkel))
-    return dutyWert
+def konvertiereAdcZuTiming(adcWert):
+    timing = adcWert / 65535.0 * (timing180Grad - timing0Grad)
+    timing = timing + timing0Grad
+    return int(timing)
 
 while True:
-    # ADC auslesen und Steuerwert für Zeiger bestimmen
-    adcWert = adcPoti.read_u16()
-    winkel = bestimmeZeigerWinkelAusADC(adcWert)
-    dutyWert = bestimmeDutyWertFuerWinkel(winkel)
-    # Motor mit berechnetem DutyWert ansteuern
-    pwm.duty_u16(dutyWert)
-    # onboard LED toggeln und schlafen
-    ledOnBoard.toggle()
-    time.sleep(0.5)
-    
+    wert = poti.read_u16()
+    timing = konvertiereAdcZuTiming(wert)
+    servo.duty_ns(timing)
+    print("Der aktuelle Wert ist {} -> Servo Timing: {}".format(wert, timing))
+    time.sleep(0.1)
