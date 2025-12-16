@@ -25,9 +25,17 @@ python3 extract_images.py
 
 ### Requirements
 
-The script requires PyMuPDF (fitz) library:
+The script requires PyMuPDF (fitz) library (tested with version 1.26.7):
 
 ```bash
+pip install PyMuPDF
+```
+
+For best practices, consider using a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install PyMuPDF
 ```
 
