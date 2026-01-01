@@ -1,0 +1,3 @@
+Die benötigten Bibliotheken finden sich in \circuitpython_10.x\adafruit-circuitpython-bundle-10.x-mpy-20251231.zip\adafruit-circuitpython-bundle-10.x-mpy-20251231\lib
+
+Gegebenenfalls den obigen Pfad anpassen - "20251231" im obigen Pfad ist das Releasedatum des Bundles und wird sich im Laufe der Zeit ändern, wenn ich das Zip-File aktualisiere.
