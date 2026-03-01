@@ -12,7 +12,7 @@ braucht, der sollte das bedenken.
 
 == Anschluß des Potentiometers
 <anschluß-des-potentiometers>
-#image("Pictures/100000010000062D00000479A8E9817A.png", width: 17cm, height: 12.31cm)
+#image("anschluss_poti.jpeg", width: 17cm, height: 12.31cm)
 
 ==
 <section>
@@ -71,9 +71,9 @@ Die Ansteuerung erfolgt über Pulsweitenmodulation (Pulse Width
 Modulation, kurz PWM). In einem PWM-Signal kann man eine Information im
 Rechtecksignal mit unterschiedlicher Pulsbreite übertragen. Die
 Information befindet sich im Verhältnis der Impulsbreite bzw.
-Impulsweite zur Periodendauer des Signals.#footnote[#blockquote[
+Impulsweite zur Periodendauer des Signals.#footnote[
 https://www.elektronik-kompendium.de/sites/raspberry-pi/2802081.htm
-]]
+]
 
 Der Raspberry Pi Pico kann an jedem GPIO ein PWM-Signal erzeugen und
 damit Geräten über PWM ansteuern. Einmal programmiert, wiederholt der
@@ -181,7 +181,7 @@ pwm.deinit()
 
 == Beispiel Servo mit Potentiometer steuern
 <beispiel-servo-mit-potentiometer-steuern>
-#image("Pictures/10000001000003F500000406D196AD88.png", width: 13.404cm, height: 13.628cm)
+#image("anschluss_motor.jpeg", width: 13.404cm, height: 13.628cm)
 
 Ziel: In Abhängigkeit von der Position des Poti bewegt sich der Servo
 auf die entsprechende Stellung.
