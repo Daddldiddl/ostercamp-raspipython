@@ -3,7 +3,7 @@ from machine import Pin, PWM
 from time import sleep_ms
 
 # PWM und GPIO initialisieren
-pwm = PWM(Pin(15))
+pwm = PWM(Pin(14))
 
 # 1. Parameter: Tastgrad (Duty Cycle)
 pwm.duty_u16(500)
