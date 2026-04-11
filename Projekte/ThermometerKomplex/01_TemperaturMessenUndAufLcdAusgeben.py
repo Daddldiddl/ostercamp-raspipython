@@ -7,7 +7,7 @@ from LCD1602 import LCD # import aus beigefuegter Datei!
 lcd = LCD()
 
 # Pins initialisieren
-adcTemperatur = machine.ADC(26)
+adcTemperatur = machine.ADC(28)
 ledOnBoard = machine.Pin(25, machine.Pin.OUT)
 
 # Funktion, welche den ADC abfragt und als Temperatur in °C

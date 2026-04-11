@@ -21,7 +21,7 @@ maximalTemperatur = 40
 temperaturBereich = maximalTemperatur - minimalTemperatur
 
 # Pins initialisieren
-adcTemperatur = machine.ADC(26)
+adcTemperatur = machine.ADC(28)
 ledOnBoard = machine.Pin(25, machine.Pin.OUT)
 
 # Motor initialisieren
