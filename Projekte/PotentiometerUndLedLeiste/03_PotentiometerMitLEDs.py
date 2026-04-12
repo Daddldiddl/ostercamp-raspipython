@@ -29,7 +29,7 @@ groesseStufe = (maxPoti - minPoti) / (anzahlLEDs + 1)
 # sonstige globale Werte
 letzterWert = 0
 letzteWerte = [0]           # Liste der letzten gemessenen Werte
-maxAnzahlLetzterWerte = 8 # maximale Anzahl Werte in der Liste
+maxAnzahlLetzteWerte = 8 # maximale Anzahl Werte in der Liste
 
 # Funktion um die LEDs abhängig von der übergebenen Zahl der LEDs
 # zu schalten (Stufe 0-6, 0: keine leuchtet, >0: jeweilige Anzahl leuchtet)
@@ -72,7 +72,7 @@ def lesePotiGemittelt():
     neuerWert = potentiometer.read_u16()
     letzteWerte.append(neuerWert) # Wert zur Liste hinzufügen
     # Begrenzt die Liste auf die maximale Anzahl
-    if (len(letzteWerte) > maxAnzahlLetzterWerte):
+    if (len(letzteWerte) > maxAnzahlLetzteWerte):
         letzteWerte = letzteWerte[1:] # kopiert die Liste ohne das älteste (0te) Element
     # Mittelwert der Liste der letzten Werte
     mittelWert = sum(letzteWerte) // len(letzteWerte) # abgerundeter Wert - keine Kommazahlen!
@@ -81,12 +81,12 @@ def lesePotiGemittelt():
 # Funktion zur Ermittelung der Anzahl der LEDs in Abhängigkeit des aktuellen Wertes
 def bestimmeAnzahlLEDs(wert):
     korrigierterWert = wert - minPoti
-    stufe = korrigierterWert // groesseStufe # abgerundetes Divisionsergebnis!
-    if (stufe < 0):
+    anzahl = korrigierterWert // groesseStufe # abgerundetes Divisionsergebnis!
+    if (anzahl < 0):
         return 0
-    elif (stufe > anzahlLEDs):
+    elif (anzahl > anzahlLEDs):
         return anzahlLEDs
-    return stufe
+    return anzahl
 
 # Hauptprogramm
 while True:
@@ -95,7 +95,7 @@ while True:
     # nur ausgeben, wenn Änderung!
     if (aktuellerWert != letzterWert):
         letzterWert = aktuellerWert
-        stufe = bestimmeAnzahlLEDs(aktuellerWert)
-        schalteLEDs(stufe)
-        print("Neuer Wert = {}, Stufe = {}".format(aktuellerWert, stufe))
+        anzahl = bestimmeAnzahlLEDs(aktuellerWert)
+        schalteLEDs(anzahl)
+        print("Neuer Wert = {}, Anzahl = {}".format(aktuellerWert, anzahl))
     time.sleep(0.1) # 100 Millisekunden

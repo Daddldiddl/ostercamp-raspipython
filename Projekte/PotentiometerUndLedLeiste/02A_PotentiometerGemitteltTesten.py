@@ -10,25 +10,24 @@ led_intern = machine.Pin(25, machine.Pin.OUT)
 
 # Potentiometer (analogerInput) definieren
 potentiometer = machine.ADC(26)
+minPoti = 250   # minimaler Wert des Potis
+maxPoti = 65500 # maximaler Wert des Potis
 
-# sonstige Konfiguration und Initialisierung
-alteWerte=[0] # Liste der vorangehenden Werte - für Mittelung!
-maxAnzahlWerte = 8
+# sonstige globale Werte
+letzterWert = 0
+letzteWerte = [0]           # Liste der letzten gemessenen Werte
+maxAnzahlLetzteWerte = 8 # maximale Anzahl Werte in der Liste
 
-# liest den aktuellen Wert aus dem analogen Eingang des Potentiometers
-def lesePoti():
-    wert = potentiometer.read_u16()
-    return wert
-
-# liest das Potentiometer, mittelt aber über die letzten Werte
+# Funktion zum Auslesen des aktuellen Wertes des Potentiometers.
+# Mittelt das Ergebnis über die letzten Werte um den Wert zu stabilisieren.
 def lesePotiGemittelt():
-    global alteWerte # wird ggfs. neu zugewiesen, daher global nutzen!
-    wert = lesePoti()
-    alteWerte.append(wert) # Wert zur Liste hinzufügen
+    global letzteWerte # wird ggfs. neu zugewiesen, daher global nutzen!
+    neuerWert = potentiometer.read_u16()
+    letzteWerte.append(neuerWert) # Wert zur Liste hinzufügen
     # Begrenzt die Liste auf die maximale Anzahl
-    if (len(alteWerte) > maxAnzahlWerte):
-        alteWerte = alteWerte[1:] # kopiert die Liste ohne das erste (0te) Element
-    mittelWert = sum(alteWerte) // len(alteWerte) # abgerundeter Wert - keine Kommazahlen!
+    if (len(letzteWerte) > maxAnzahlLetzteWerte):
+        letzteWerte = letzteWerte[1:] # kopiert die Liste ohne das erste (0te) Element
+    mittelWert = sum(letzteWerte) // len(letzteWerte) # abgerundeter Wert - keine Kommazahlen!
     return mittelWert
 
 # Hauptprogramm
@@ -39,5 +38,5 @@ while True:
     # nur ausgeben, wenn Änderung!
     if (aktuellerWert != alterWert):
         alterWert = aktuellerWert
-        print("Neuer Wert = {} aus {}".format(aktuellerWert, alteWerte))
+        print("Neuer Wert = {} aus {}".format(aktuellerWert, letzteWerte))
     time.sleep(0.1) # 100 Millisekunden
