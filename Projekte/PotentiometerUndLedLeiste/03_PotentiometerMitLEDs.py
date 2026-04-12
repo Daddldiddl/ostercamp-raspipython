@@ -13,12 +13,12 @@ led_intern = machine.Pin(25, machine.Pin.OUT)
 potentiometer = machine.ADC(26)
 
 #LED Pins
-led1 = machine.Pin(1, machine.Pin.OUT)
-led2 = machine.Pin(2, machine.Pin.OUT)
-led3 = machine.Pin(3, machine.Pin.OUT)
-led4 = machine.Pin(4, machine.Pin.OUT)
-led5 = machine.Pin(5, machine.Pin.OUT)
-led6 = machine.Pin(6, machine.Pin.OUT)
+led1 = machine.Pin(15, machine.Pin.OUT)
+led2 = machine.Pin(14, machine.Pin.OUT)
+led3 = machine.Pin(13, machine.Pin.OUT)
+led4 = machine.Pin(12, machine.Pin.OUT)
+led5 = machine.Pin(11, machine.Pin.OUT)
+led6 = machine.Pin(10, machine.Pin.OUT)
 
 # sonstige Konfiguration und Initialisierung
 alteWerte=[0] # Liste der vorangehenden Werte - für Mittelung!
