@@ -9,12 +9,12 @@ import time
 led_intern = machine.Pin(25, machine.Pin.OUT)
 
 #LED Pins
-led1 = machine.Pin(1, machine.Pin.OUT)
-led2 = machine.Pin(2, machine.Pin.OUT)
-led3 = machine.Pin(3, machine.Pin.OUT)
-led4 = machine.Pin(4, machine.Pin.OUT)
-led5 = machine.Pin(5, machine.Pin.OUT)
-led6 = machine.Pin(6, machine.Pin.OUT)
+led1 = machine.Pin(15, machine.Pin.OUT)
+led2 = machine.Pin(14, machine.Pin.OUT)
+led3 = machine.Pin(13, machine.Pin.OUT)
+led4 = machine.Pin(12, machine.Pin.OUT)
+led5 = machine.Pin(11, machine.Pin.OUT)
+led6 = machine.Pin(10, machine.Pin.OUT)
 
 # Schaltet die LEDs abhängig vom übergebenen Wert (0-6)
 def setzeLEDs(stufe):   
@@ -55,9 +55,9 @@ setzeLEDs(anzahlLEDs)
 time.sleep(1)
 while True:
     led_intern.toggle()
-    anzahlLEDs=anzahlLEDs+1
-    if(anzahlLEDs>6):
-        anzahlLEDs=0
+    anzahlLEDs += 1
+    if(anzahlLEDs > 6):
+        anzahlLEDs = 0
     setzeLEDs(anzahlLEDs)
     print("Anzahl aktiver LEDs = {}".format(anzahlLEDs))
     time.sleep(0.5)
