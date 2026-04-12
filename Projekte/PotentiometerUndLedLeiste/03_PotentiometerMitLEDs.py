@@ -11,27 +11,29 @@ led_intern = machine.Pin(25, machine.Pin.OUT)
 
 # Potentiometer (analogerInput) definieren
 potentiometer = machine.ADC(26)
+minPoti = 250   # minimaler Wert des Potis
+maxPoti = 65500 # maximaler Wert des Potis
 
-#LED Pins
+# LED Pins
 led1 = machine.Pin(15, machine.Pin.OUT)
 led2 = machine.Pin(14, machine.Pin.OUT)
 led3 = machine.Pin(13, machine.Pin.OUT)
 led4 = machine.Pin(12, machine.Pin.OUT)
 led5 = machine.Pin(11, machine.Pin.OUT)
 led6 = machine.Pin(10, machine.Pin.OUT)
+anzahlLEDs = 6
 
-# sonstige Konfiguration und Initialisierung
-alteWerte=[0] # Liste der vorangehenden Werte - für Mittelung!
-maxAnzahlAlterWerte = 8
+# Wertebereich pro LED (+1 für 0er-Stufe)
+groesseStufe = (maxPoti - minPoti) / (anzahlLEDs + 1)
 
-# Potentiometeranpassung
-minPoti = 250
-maxPoti = 65500
-anzahlStufen = 6
-groesseStufe = (maxPoti - minPoti) / (anzahlStufen + 1)
+# sonstige globale Werte
+letzterWert = 0
+letzteWerte = [0]           # Liste der letzten gemessenen Werte
+maxAnzahlLetzterWerte = 8 # maximale Anzahl Werte in der Liste
 
-# Schaltet die LEDs abhängig vom übergebenen Wert (0-6)
-def setzeLEDs(stufe):   
+# Funktion um die LEDs abhängig von der übergebenen Zahl der LEDs
+# zu schalten (Stufe 0-6, 0: keine leuchtet, >0: jeweilige Anzahl leuchtet)
+def schalteLEDs(stufe):   
     # LED1 schalten
     if(stufe>=1):
         led1.value(1)
@@ -63,43 +65,37 @@ def setzeLEDs(stufe):
     else:
         led6.value(0)
     
-# liest den aktuellen Wert aus dem analogen Eingang des Potentiometers
-def lesePoti():
-    wert = potentiometer.read_u16()
-    return wert
-
-# liest das Potentiometer, mittelt aber über die letzten Werte
+# Funktion zum Auslesen des aktuellen Wertes des Potentiometers.
+# Mittelt das Ergebnis über die letzten Werte um den Wert zu stabilisieren.
 def lesePotiGemittelt():
-    global alteWerte # wird ggfs. neu zugewiesen, daher global nutzen!
-    wert = lesePoti()
-    alteWerte.append(wert) # Wert zur Liste hinzufügen
+    global letzteWerte # wird ggfs. neu zugewiesen, daher global nutzen!
+    neuerWert = potentiometer.read_u16()
+    letzteWerte.append(neuerWert) # Wert zur Liste hinzufügen
     # Begrenzt die Liste auf die maximale Anzahl
-    if (len(alteWerte) > maxAnzahlAlterWerte):
-        alteWerte = alteWerte[1:] # kopiert die Liste ohne das erste (0te) Element
-    else:
-        return minPoti
-    mittelWert = sum(alteWerte) // len(alteWerte) # abgerundeter Wert - keine Kommazahlen!
+    if (len(letzteWerte) > maxAnzahlLetzterWerte):
+        letzteWerte = letzteWerte[1:] # kopiert die Liste ohne das älteste (0te) Element
+    # Mittelwert der Liste der letzten Werte
+    mittelWert = sum(letzteWerte) // len(letzteWerte) # abgerundeter Wert - keine Kommazahlen!
     return mittelWert
 
-# bestimmt die Stufe (Anzahl der LEDs)
-def bestimmeStufe(wert):
+# Funktion zur Ermittelung der Anzahl der LEDs in Abhängigkeit des aktuellen Wertes
+def bestimmeAnzahlLEDs(wert):
     korrigierterWert = wert - minPoti
     stufe = korrigierterWert // groesseStufe # abgerundetes Divisionsergebnis!
     if (stufe < 0):
         return 0
-    elif (stufe > anzahlStufen):
-        return anzahlStufen
+    elif (stufe > anzahlLEDs):
+        return anzahlLEDs
     return stufe
 
 # Hauptprogramm
-alterWert = 0
 while True:
     led_intern.toggle()
     aktuellerWert = lesePotiGemittelt()
     # nur ausgeben, wenn Änderung!
-    if (aktuellerWert != alterWert):
-        alterWert = aktuellerWert
-        stufe = bestimmeStufe(aktuellerWert)
-        setzeLEDs(stufe)
+    if (aktuellerWert != letzterWert):
+        letzterWert = aktuellerWert
+        stufe = bestimmeAnzahlLEDs(aktuellerWert)
+        schalteLEDs(stufe)
         print("Neuer Wert = {}, Stufe = {}".format(aktuellerWert, stufe))
     time.sleep(0.1) # 100 Millisekunden
